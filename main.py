@@ -11,7 +11,7 @@ from config.config import  Production ,Development
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Development)
+app.config.from_object(Production)
 
 from models.inventory import Products
 from models.salesinv import Sales
