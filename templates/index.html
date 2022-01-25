@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IMS System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: black;
+    }
+    
+    .jumbotron{
+        background-color: white;
+        color: black;
+        height: 500px;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        margin-top: 40px;
+    }
+    .content{
+      float: left;
+    }
+    .image{
+      float: right;
+    }
+    body{
+        background-color:teal;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', Verdana, sans-serif;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .jumbotron {height:auto;} 
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">IMS System</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/sales">Sales</a></li>
+        {% if current_user.is_authenticated %}
+        <li><a href="/inventory">Inventory</a></li>
+        <li ><a href="/stock">Stock</a></li>
+        {% endif %}
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if not current_user.is_authenticated %}
+        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li><a href="/signup"><span class="glyphicon glyphicon-log-in"></span> Sign Up</a></li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+    <div class="container">
+        <div class="jumbotron">
+          <div class="content"> 
+            <h1>IMS System</h1>     
+            <p>Manage your inventory and keep track of sales on one platform.</p>
+            <p>See charts and sale analysis for all your business needs.</p>
+            <p>Be in charge of your business from wherever you are .</p>
+          </div>
+          <div class= "image">
+            <img src="/static/images/coverimg.jpg" alt="Coverimg" width='350px' height="380px">
+          </div>
+        </div>     
+      </div>
+</div>
+
+
+
+</body>
+</html>

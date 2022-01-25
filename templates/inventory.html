@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Inventory</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: black;
+    }
+    body{
+      margin-bottom: 50px;
+    }
+    .btn {
+      border: 5px; /* Remove borders */
+      color: white; /* Add a text color */
+      padding: 10px 24px; /* Add some padding */
+      cursor: pointer; /* Add a pointer cursor on mouse-over */
+    }
+    .sale {
+      background-color: green;
+    }
+    .submit{
+      border: 5px; /* Remove borders */
+      border-radius: 5px;
+      background-color: green;
+      color: white; /* Add a text color */
+      padding: 10px 24px; /* Add some padding */
+      cursor: pointer
+
+    }
+    .new {
+      margin-top: 40px;
+      margin-inline-start: 100px;
+      /*float: right;*/
+      background-color: blue;
+
+    }
+    .edit{
+      background-color: orange;
+    }
+    .delete{
+      background-color: crimson;
+    }
+   
+    /* On small screens, set height to 'auto' for nav and grid */
+    @media screen and (max-width: 600px) {
+    .topnav a, .div input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .div input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">IMS System</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/sales">Sales</a></li>
+        {% if current_user.is_authenticated %}
+        <li class="active"><a href="/inventory">Inventory</a></li>
+        <li ><a href="/stock">Stock</a></li>
+        {% endif %}
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if not current_user.is_authenticated %}
+        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li><a href="/signup"><span class="glyphicon glyphicon-log-in"></span> Sign Up</a></li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Button trigger modal -->
+<h3>Welcome {{name}}</h3> 
+<div>
+  <button type="button" class="new btn" data-toggle="modal" data-target="#exampleModal">
+  Add product
+  </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">New Product</h4>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/save_products" method="post">
+              <div class="form-group">
+              <div class="form-group">
+              <label for="name">Name:</label>
+              <input name='name' type="name" class="form-control" placeholder="Enter product name" id="name">
+              </div>
+              <div class="form-group">
+              <label for="bp">Buying Price:</label>
+              <input name='bp' type="price" class="form-control" placeholder="Enter buying price" id="bp">
+              </div>
+              <div class="form-group">
+              <label for="sp">Selling Price:</label>
+              <input name='sp' type="price" class="form-control" placeholder="Enter selling price" id="sp">
+              </div>
+              <input type="submit" class="submit" value="submit">
+            </form>      
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+<!--class="btn btn-primary"-->
+
+<div class="container">
+  <h2>Inventory Table</h2>
+   <!--The .table-bordered class adds borders to a table -->
+  <p> </p>          
+  <table class="table table-bordered" id="table1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>NAME</th>
+        <th>B.P</th>
+        <th>S.P</th>
+        <th>View Sales</th>
+        <th>View Stock</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Make Sale </th>
+        <th>Add Stock </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in myData %}
+      <tr>
+        <td>{{row.id}}</td>
+        <td>{{row.name}}</td>
+        <td>{{row.bp}}</td>
+        <td>{{row.sp}}</td>
+        <td><a href="/sales/{{row.id}}">sales</a> </td>
+        <td><a href="/stock/{{row.id}}">stock</a> </td>
+        <td>
+          <button type="button" class="edit btn" data-toggle="modal" data-target="#Modal{{row.id}}">
+            Edit
+          </button>
+
+          <!-- Modal form for edit-->
+          <div class="modal fade" id="Modal{{row.id}}" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="ModalLabel">Edit Product Details</h4>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/edit_item" method="post">
+                    <div class="form-group">
+                    <div class="form-group">
+                    <label >Product id:</label>
+                    <input name='pid' class="form-control" type="name" value="{{row.id}}"  >
+                    </div>
+                    <div class="form-group">
+                    <label >Name:</label>
+                    <input name='pname' class="form-control" type="name"  value="{{row.name}}"  >
+                    </div>
+                    <div class="form-group">
+                    <label >B.P:</label>
+                    <input name='pbp' class="form-control" type="name" value="{{row.bp}}"  >
+                    </div>
+                    <div class="form-group">
+                    <label >S.P:</label>
+                    <input name='psp' class="form-control" type="name" value="{{row.sp}}"  >
+                    </div>
+                    <input type="submit" class="submit" value="submit">
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        </td>
+        <td>
+          <button type="button" class="delete btn" data-toggle="modal" data-target="#deleteModal{{row.id}}">
+            delete
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal{{row.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="deleteModalLabel">Delete Product</h4>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/delete_item" method="post">
+                    <div class="form-group">
+                    <label >Product id:</label>
+                    <input name='product_id' type="name" class="form-control" value="{{row.id}}"  >
+                    </div>
+                    <div class="form-group">
+                    <p>Do you want to delete this product permanently from your stock? </p>
+                    </div>
+                    <input type="submit"  class="submit" value="Yes">
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        </td>
+        <td>
+          <!-- Button trigger modal -->
+          <button type="button" class="sale btn" data-toggle="modal" data-target="#saleModal{{row.id}}">
+            sell
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="saleModal{{row.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="exampleModalLabel">Make sale</h4>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/make_sale" method="post">
+                    <div class="form-group">
+                    <label >Product id:</label>
+                    <input name='product_id' type="name" class="form-control" value="{{row.id}}"  >
+                    </div>
+                    <div class="form-group">
+                    <label >Quantity:</label>
+                    <input name='quantity' type="name" class="form-control" placeholder="Enter quantity" >
+                    </div>
+                    <input type="submit"  class="submit" value="submit">
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </td>
+        <td>
+          <!-- Button trigger modal -->
+          <button type="button" class="sale btn" data-toggle="modal" data-target="#stockModal{{row.id}}">
+            stock
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="stockModal{{row.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="exampleModalLabel">Add Stock</h4>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/add_stock" method="post">
+                    <div class="form-group">
+                    <label >Product id:</label>
+                    <input name='product_id' type="name" class="form-control" value="{{row.id}}"  >
+                    </div>
+                    <div class="form-group">
+                    <label >Quantity:</label>
+                    <input name='quantity' type="name" class="form-control" placeholder="Enter quantity" >
+                    </div>
+                    <input type="submit"  class="submit" value="submit">
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+   
+<script>
+  $(document).ready( function () {
+  $('#table1').DataTable();
+  } );
+</script>
+
+
+
+</body>
+</html>
