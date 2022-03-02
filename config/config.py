@@ -10,7 +10,7 @@ class Development():
     
 
 class Production():
-    SQLALCHEMY_DATABASE_URI='postgresql://tpqyogvupfpiuh:a2eb22348ecb7bcd49217b088d170302e9b0bc82a27ece7d2baea0e16bc1f093@ec2-52-208-185-143.eu-west-1.compute.amazonaws.com:5432/d25bjau5n2s2rb'
+    SQLALCHEMY_DATABASE_URI='postgresql://fdxcpgprlhsbwn:1eb19ae264d628d19e9bf2c9ffb7aeffb4e96d76a16810eaaa7309823bef4040@ec2-54-73-178-126.eu-west-1.compute.amazonaws.com:5432/d5bpd849bd40qp'
     SECRET_KEY = '11ae8fcaceff9710e238b932e95072a1'
     # SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
     # DEBUG = os.getenv("DEBUG")
