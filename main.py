@@ -116,7 +116,7 @@ def stock():
     records =Stock.query.all()
     return render_template('stock.html',myStock=records)
 
-@app.route('/sales)
+@app.route('/sales')
 @login_required           
 def sales():
 
