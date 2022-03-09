@@ -59,9 +59,9 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
+        {% if current_user.is_authenticated %}
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/sales">Sales</a></li>
-        {% if current_user.is_authenticated %}
         <li><a href="/inventory">Inventory</a></li>
         <li ><a href="/stock">Stock</a></li>
         {% endif %}
