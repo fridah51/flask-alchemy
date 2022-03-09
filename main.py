@@ -110,10 +110,18 @@ def inventory():
     return render_template('inventory.html',name=current_user.name, myData=records)
 
 @app.route('/stock')
+@login_required
 def stock():
 
     records =Stock.query.all()
     return render_template('stock.html',myStock=records)
+
+@app.route('/sales)
+@login_required           
+def sales():
+
+    records =Sales.query.all()
+    return render_template('sales.html',mySales=records)
 
 
 @app.route('/sales/<int:id>')
@@ -205,6 +213,7 @@ def delete_item():
 
 
 @app.route('/dashboard')
+@login_required           
 def dashboard():
     
     #query the database and obtain sales per month as python 
