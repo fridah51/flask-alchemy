@@ -10,7 +10,7 @@ class Development():
     
 
 class Production():
-    SQLALCHEMY_DATABASE_URI = 'postgresql://alibabaa:12345@http://134.209.24.19:5432/alibabaa'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://alibabaa:12345@localhost:5432/alibabaa'
     SECRET_KEY = '11ae8fcaceff9710e238b932e95072a1'
     # SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
     # DEBUG = os.getenv("DEBUG")
